@@ -1,7 +1,9 @@
+import ProductTable from "../components/ProducTable/ProducTable";
+
 function Administracion() {
     return (
         <>
-            Adminstracion
+            <ProductTable />
         </>
     )
 }
