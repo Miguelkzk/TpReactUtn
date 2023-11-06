@@ -1,7 +1,7 @@
 # Trabajo practico React 
 
 Miguel Kruzliak 49042
-H
+
 
 
 ## Configuration
