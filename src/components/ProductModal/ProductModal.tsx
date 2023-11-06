@@ -51,7 +51,6 @@ const ProductModal = ({ show, onHide, title, modalType, prod, refreshData }: Pro
         }
         catch (error) {
             console.error(error);
-            console.error(error);
             toast.error("Ha ocurrido un error")
         }
 

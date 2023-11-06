@@ -50,7 +50,6 @@ function ProductTable() {
         }
         fetchProducts();
     }, [refreshData]);
-    console.log(JSON.stringify(products, null, 2));
     return (
         <>
             <Button style={{ margin: '10px' }} onClick={() => handleClick("Nuevo Producto", initializeNewProduct(), ModalType.CREATE)}>
@@ -91,6 +90,7 @@ function ProductTable() {
                     title={title}
                     modalType={modalType}
                     prod={product}
+                    refreshData={setRefreshData}
                 />
             )}
         </>
