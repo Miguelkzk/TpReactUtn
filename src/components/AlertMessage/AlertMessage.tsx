@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AlertGenerator from "../AlertGenerator/AlertGenerator";
+import { Button } from "react-bootstrap";
 
 function AlertMessage() {
     //guarda el valor del campo de texto
@@ -22,7 +23,7 @@ function AlertMessage() {
             <h3>Mensaje de alerta</h3>
             <input type="text" value={inputValue} onChange={(e) =>
                 setInputValue(e.target.value)} />
-            <button onClick={handleClick}>Enviar</button>
+            <Button onClick={handleClick} style={{ marginLeft: '20px' }}>Enviar</Button>
             {showAlert && < AlertGenerator message={message} />}
         </div>
 
