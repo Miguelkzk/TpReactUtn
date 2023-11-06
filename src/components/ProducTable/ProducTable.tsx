@@ -2,12 +2,44 @@ import { useEffect, useState } from "react";
 import { Product } from "../../types/Product";
 import { ProductService } from "../../services/ProductService";
 import Loader from "../Loader/Loader";
-import { Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
+import { ModalType } from "../../types/Modal";
+import ProductModal from "../ProductModal/ProductModal";
+import EditButton from "../EditButton/EditButton";
+import DeleteButton from "../DeleteButton/DeleteButton";
 function ProductTable() {
+    //inicializamos el producto por defecto para evitar el undefined
+    const initializeNewProduct = (): Product => {
+        return {
+            id: 0,
+            title: "",
+            price: 0,
+            description: "",
+            category: "",
+            image: ""
+        }
+    }
+
+    //paso producto seleccionado como prop al modal 
+    const [product, setProduct] = useState<Product>(initializeNewProduct);
+
+    //manejo el modal 
+    const [showModal, setShowModal] = useState(false);
+    const [modalType, setModalType] = useState<ModalType>(ModalType.NONE);
+    const [title, setTitle] = useState("");
+    //logica del modal 
+    const handleClick = (newTitle: string, prod: Product, modal: ModalType) => {
+        setTitle(newTitle);
+        setModalType(modal)
+        setProduct(prod);
+        setShowModal(true);
+    };
     //recibe los datos de la api
     const [products, setProducts] = useState<Product[]>([]);
     //muesta el loader mientras espera los datos de la api
     const [isLoading, setIsLoading] = useState(true);
+    //refresca los datos de la tabla luego de cada operacion o refresh data cambie de estado 
+    const [refreshData, setRefreshData] = useState(false);
     useEffect(() => {
         //traigo todos los componentes
         const fetchProducts = async () => {
@@ -17,10 +49,14 @@ function ProductTable() {
             setIsLoading(false);
         }
         fetchProducts();
-    }, []);
+    }, [refreshData]);
     console.log(JSON.stringify(products, null, 2));
     return (
         <>
+            <Button style={{ margin: '10px' }} onClick={() => handleClick("Nuevo Producto", initializeNewProduct(), ModalType.CREATE)}>
+                Nuevo Producto
+            </Button>
+
             {isLoading ? <Loader /> : (<Table hover>
                 <thead>
                     <tr>
@@ -29,6 +65,8 @@ function ProductTable() {
                         <th>Descripcion</th>
                         <th>Categoria</th>
                         <th>Imagen</th>
+                        <th>Editar</th>
+                        <th>Borrar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,11 +77,22 @@ function ProductTable() {
                             <td>{product.description}</td>
                             <td>{product.category}</td>
                             <td><img src={product.image} alt={product.title} style={{ width: '50px' }} /></td>
+                            <td><EditButton onClick={() => handleClick("Editar producto", product, ModalType.UPDATE)} /></td>
+                            <td><DeleteButton onClick={() => handleClick("Borrar producto", product, ModalType.DELETE)} /></td>
                         </tr>
                     ))}
                 </tbody>
             </Table >)
             }
+            {showModal && (
+                <ProductModal
+                    show={showModal}
+                    onHide={() => setShowModal(false)}
+                    title={title}
+                    modalType={modalType}
+                    prod={product}
+                />
+            )}
         </>
     )
 }
